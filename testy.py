@@ -1,7 +1,7 @@
 import sys; sys.stdin = open('data/(A1)input.txt', 'r')
 
-def find(sfdata):
-    global res, cnt, lst
+def find(lst):
+    global res, cnt, visit
 
     if cnt > 5: return
 
@@ -10,12 +10,14 @@ def find(sfdata):
             res = cnt
             return
 
-
+    for x in range(len(visit)):
+        if not visit[x]:
+            visit[x] = 1
+            find(shuffle(x, lst[:N//2], lst[N//2:]))
 
 
 def shuffle(x, l, r):
-    global lst
-
+    global lst, cnt
     if x >= 3:
         x = 5 - x
         l, r = r, l
@@ -24,19 +26,24 @@ def shuffle(x, l, r):
             if l: lst.append(l.pop(0))
         for _ in range(3 - x):
             if r: lst.append(r.pop(0))
+    cnt += 1
     return lst
 
+
 t = int(input())
-for tc in range(2):
+for tc in range(5):
     N = int(input())
     arr = list(map(int, input().split()))
     lst = []
     cnt = 0
     res = -1
-    for x in range(6:)
+    visit = [0]*6
+    for x in range(6):
+        visit[x] = 1
         find(shuffle(x, arr[:N//2], arr[N//2:]))
-        if 0 <= res <=5:
-            print(res)
+        visit[x] = 0
+        if 0 <= cnt <=5:
+            print(cnt)
             break
     else:
         print(-1)
