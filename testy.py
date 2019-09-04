@@ -47,3 +47,4 @@ for tc in range(5):
             break
     else:
         print(-1)
+
