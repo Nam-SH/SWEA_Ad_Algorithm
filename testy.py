@@ -1,12 +1,27 @@
-import sys; sys.stdin = open('data/(5185)input.txt', 'r')
+import sys; sys.stdin = open('data/(5209)input.txt', 'r')
 
-def find(N):
-    res = ''
-    for i in range(int(N)):
-        if len(data[i]) < 4: res += format(int(data[i], 16), 'b').zfill(4)
-        else: res += format(int(data[i], 16), 'b')
-    return res
+def backtrack(idx):
+    global res, Min
+
+    if res >= Min:
+        return
+
+    if idx == N:
+        Min = min(Min, res)
+        return
+
+    for i in range(N):
+        if check[i]: continue
+        check[i] = True
+        res += arr[idx][i]
+        backtrack(idx + 1)
+        res -= arr[idx][i]
+        check[i] = False
 
 for tc in range(int(input())):
-    N, data = input().split()
-    print('#{} {}'.format(tc + 1, find(N)))
+    N = int(input())
+    arr = [list(map(int, input().split())) for _ in range(N)]
+    check = [0] * N
+    res, Min = 0, 9999
+    backtrack(0)
+    print('#{} {}'.format(tc + 1, Min))
