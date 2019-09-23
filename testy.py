@@ -1,20 +1,30 @@
-import sys; sys.stdin = open('data/(5248)input.txt', 'r')
+import sys; sys.stdin = open('data/(5207)input.txt', 'r')
 
-T = int(input())
-N, M = map(int, input().split())
-arr = list(map(int, input().split()))
 
-N, M = map(int, input().split())
-arr = list(map(int, input().split()))
+def binary_search_recursion(target, start, end, data):
+    global cnt
 
-N, M = map(int, input().split())
-arr = list(map(int, input().split()))
+    if start > end: return
 
-check = [[] for _ in range(N + 1)]
+    mid = (start + end) // 2
+    if data[mid] == target:
+        cnt += 1
+        return
 
-for i in range(0, len(arr) - 1, 2):
-    check[arr[i]].append(arr[i + 1])
+    elif data[mid] > target:
+        end = mid - 1
 
-print(check[1:])
+    else: start = mid + 1
 
-for i in range(len(check)):
+    binary_search_recursion(target, start, end, data)
+    return
+
+for tc in range(int(input())):
+    N, M = map(int, input().split())
+    arr1 = sorted(list(map(int, input().split())))
+    arr2 = list(map(int, input().split()))
+    cnt = 0
+    for target in arr2:
+        binary_search_recursion(target, 0, len(arr1) - 1, arr1)
+
+    print('#{} {}'.format(tc + 1, cnt))
