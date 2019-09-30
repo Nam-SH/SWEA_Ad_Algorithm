@@ -1,32 +1,38 @@
-import sys; sys.stdin = open('data/(5250)input.txt', 'r')
+import sys; sys.stdin = open('data/(5249)input.txt', 'r')
 
-from collections import deque
 
-def BFS(y, x, calc):
-    global Min
+def getParent(parent, num):
+    if parent[num] == num: return num
+    return getParent(parent, parent[num])
 
-    q = deque()
-    q.append((y, x, calc))
+def unionParent(parent, num1, num2):
+    a = getParent(parent, num1)
+    b = getParent(parent, num2)
+    if a == b: return
+    if a < b: parent[b] = a
+    else: parent[a] = b
 
-    while q:
-        i, j, res = q.popleft()
+def findParent(parent, num1, num2):
+    a = getParent(parent, num1)
+    b = getParent(parent, num2)
+    if a == b: return True
+    else: return False
 
-        if res >= Min: return
-
-        if (i, j) == (N - 1, N - 1):
-            Min = min(Min, res)
-            return
-
-        for dy, dx in (1, 0), (0, 1):
-            ty = i + dy; tx = j + dx
-            if not (0 <= ty < N and 0 <= tx < N): continue
-            if arr[ty][tx] > arr[i][j]: q.append((ty, tx, res + 1 + arr[ty][tx] - arr[i][j]))
-            else: q.append((ty, tx, res + 1))
 
 for tc in range(int(input())):
-    N = int(input())
-    arr = [list(map(int, input().split())) for _ in range(N)]
-    check = [[0] * N for _ in range(N)]
-    Min = 99999
-    BFS(0, 0, 0)
-    print('#{} {}'.format(tc + 1, Min))
+
+    V, E = map(int, input().split())
+
+    parent = [i for i in range(V + 1)]
+
+    arr = [tuple(map(int, input().split())) for _ in range(E)]
+
+    arr.sort(key = lambda x: x[2])
+
+    sum = 0
+    for a in arr:
+        if findParent(parent, a[0], a[1]): continue
+        sum += a[2]
+        unionParent(parent, a[0], a[1])
+
+    print('#{} {}'.format(tc + 1, sum))
