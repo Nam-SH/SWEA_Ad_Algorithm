@@ -1,52 +1,32 @@
-import sys; sys.stdin = open('data/(5250)input.txt', 'r')
+import sys;sys.stdin = open('data/(5250)input.txt', 'r')
 
-from heapq import heappush, heappop
+from collections import deque
 
-def prim(start):
+def find():
+    q = deque()
+    q.append((0, 0))
+    check[0][0] = 0
 
-    visit[start] = True
+    while q:
+        y, x = q.popleft()
+        for ny, nx in (-1, 0), (0, 1), (1, 0), (0, -1):
+            ty = y + ny; tx = x + nx
+            if not (0 <= ty < N > tx >= 0): continue
 
-    priority_queue = []
+            if arr[ty][tx] > arr[y][x]: w = arr[ty][tx] - arr[y][x] + 1
+            else: w = 1
 
-    for i in range(len(arr[start])):
-        nextweight, next = arr[start][i]
-        heappush(priority_queue, (nextweight, next))
+            if check[ty][tx] > check[y][x] + w:
+                check[ty][tx] = check[y][x] + w
+                q.append((ty, tx))
 
-    ans = 0
-    while priority_queue:
+    return check[N - 1][N - 1]
 
-        hereweight, here = heappop(priority_queue)
-        if visit[here]: continue
-        visit[here] = True
-        ans += hereweight
-        for i in range(len(arr[here])):
-            thereweight, there = arr[here][i]
-            heappush(priority_queue, (thereweight, there))
-    print(ans)
 
-V = 7
-E = 11
+for tc in range(int(input())):
+    N = int(input())
+    arr = [list(map(int, input().split())) for _ in range(N)]
+    check = [[0xffffff] * N for _ in range(N)]
+    ans = find()
 
-visit = [0] * (V + 1)
-
-arr = [[] for _ in range(V + 1)]
-
-data = [
-    (1, 2, 2),
-    (2, 3, 5),
-    (1, 3, 20),
-    (1, 4, 10),
-    (4, 5, 1),
-    (5, 6, 23),
-    (3, 6, 3),
-    (3, 5, 6),
-    (7, 6, 9),
-    (7, 3, 2),
-    (2, 7, 7)
-]
-
-for num1, num2, weight in data:
-    arr[num1].append((weight, num2))
-    arr[num2].append((weight, num1))
-
-prim(1)
+    print(f'#{tc + 1} {ans}')
